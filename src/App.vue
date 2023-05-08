@@ -1,6 +1,14 @@
 <template>
-  <div id="app">
-    <canvas id=canvas></canvas>
+  <div id="app" style="text-align: center;" @mouseover.once="resume">
+    <div class="button" @click="amplify" >放大</div>
+
+    <div class="button" @click="reduce">缩小</div>
+    <canvas ref="live2d"
+            @mousedown="handleMouseDown"
+            @mousemove="handleMouseMove"
+            @mouseup="handleMouseUp"
+            style="position: relative;"
+    ></canvas>
   </div>
 </template>
 
@@ -9,6 +17,11 @@
 import * as PIXI from 'pixi.js';
 import { Live2DModel } from 'pixi-live2d-display/cubism4';
 import axios from "axios"
+import { config } from 'pixi-live2d-display';
+
+// log level
+config.logLevel = config.LOG_LEVEL_WARNING; // LOG_LEVEL_VERBOSE, LOG_LEVEL_ERROR, LOG_LEVEL_NONE
+
 
 
 
@@ -25,8 +38,10 @@ export default {
     analyser:"",
     frequencyData:"",
     o :80,
-    then:"",
-    v:0
+    isDragging: false,
+    lastX: 0,
+    lastY: 0,
+    scale:1
 
   }
   },
@@ -44,9 +59,18 @@ export default {
 
     })()
 
+    window.onresize=()=>{
 
 
+      this.model4.x=this.$refs.live2d.clientWidth/2-this.model4.width/2
 
+
+    }
+
+
+    // window.onclick=()=>{
+    //   this.getWav("synthesize.wav")
+    // }
 
   }
   ,
@@ -58,6 +82,54 @@ export default {
     this.websock.close(); //离开路由之后断开websocket连接
   },
   methods:{
+    resume(){
+      this.audioCtx.resume()
+
+    }
+    ,
+    reduce(){
+      if(this.scale<=0.2){
+        return
+      }
+      this.scale-=0.1
+      this.model4.scale.set(this.scale)
+      this.$refs.live2d.width=this.model4.width
+      this.$refs.live2d.height=this.model4.height
+      this.app.resizeTo=this.$refs.live2d
+    },
+    amplify(){
+      if (this.scale>=1.5){
+        return
+      }
+      this.scale+=0.1
+      this.model4.scale.set(this.scale)
+      this.$refs.live2d.width=this.model4.width
+      this.$refs.live2d.height=this.model4.height
+      this.app.resizeTo=this.$refs.live2d
+    },
+
+    handleMouseDown(event) {
+      this.isDragging = true;
+      this.lastX = event.clientX;
+      this.lastY = event.clientY;
+    },
+    handleMouseMove(event) {
+      if (this.isDragging) {
+        const deltaX = event.clientX - this.lastX;
+        const deltaY = event.clientY - this.lastY;
+        this.$refs.live2d.style.left = parseInt(this.$refs.live2d.style.left || 0) + deltaX + "px";
+        this.$refs.live2d.style.top = parseInt(this.$refs.live2d.style.top || 0) + deltaY + "px";
+        this.lastX = event.clientX;
+        this.lastY = event.clientY;
+      }
+    },
+    handleMouseUp(event) {
+      this.isDragging = false;
+      this.isDragging = false;
+      this.isDragging = false;
+
+    }
+  ,
 
     initWebSocket() {
       //初始化weosocket
@@ -88,21 +160,30 @@ export default {
       console.log('关闭')
     },
     async createModel(){
-      const app = new PIXI.Application({
-        view: document.getElementById("canvas"),
+
+      this.model4 = await Live2DModel.from("./model/Haru.model3.json",{ autoUpdate: true });
+      this.set=this.model4.internalModel.coreModel.setParameterValueById
+      this.app = new PIXI.Application({
+        view: this.$refs.live2d,
         autoStart: true,
-        resizeTo: window
+        width:this.model4.width,
+        height:this.model4.height,
+        backgroundAlpha:0
       });
-      this.model4 = await Live2DModel.from("./Haru/Haru.model3.json",{ autoUpdate: true });
-      app.stage.addChild(this.model4);
-      this.model4.scale.set(0.25);
-      this.model4.x = 300;
+
+      this.app.stage.addChild(this.model4);
+
+      this.model4.x=this.$refs.live2d.clientWidth/2-this.model4.width/2
+
+
+
+
     },
     setMouthOpenY(v){
       v = Math.max(0, Math.min(1, v));
 
 
-      this.model4.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', v)
+      this.model4.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', v,1,true)
 
 
 
@@ -136,7 +217,7 @@ export default {
 
       this.setMouthOpenY((this.arrayAdd(arr)/arr.length - 20)/6);
 
-      setTimeout(this.run,1000/30);
+      setTimeout(this.run,1);
     },
     arrayAdd(a){return a.reduce((i,a)=>i+a,0)},
     getWav(url,mood){
@@ -162,6 +243,8 @@ export default {
           // 连接到 音频分析器
 
           source.connect(this.analyser);
+
+          window.navigator.mediaDevices.getUserMedia({ audio: true });
           // 开始播放
 
 
@@ -170,6 +253,8 @@ export default {
 
 
           this.model4.expression(mood)
+          this.model4.motion("TapBody")
+          debugger;
 
 
           source.start(0);
@@ -179,11 +264,19 @@ export default {
             // 停止播放
 
             this.playing = false;
+            this.websock.send(JSON.stringify({
+              message:"ended",type:"successful"
+            }))
+
+
 
             this.model4.expression(0);
 
 
           }
+        }).catch(error => {
+          console.log(error)
+          this.websock.send(-1)
         })
 
 
@@ -203,5 +296,34 @@ export default {
 </script>
 
 <style>
+
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background-color: #01FE00;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+
+.button {
+  height: 5vh;
+  width: 5vw;
+  background: #E6A23C;
+  margin-bottom: 10px;
+  border-radius: 60px;
+  font-size: 3vh;
+  position: relative;
+  z-index: 100;
+  cursor: pointer
+}
+#live2d:hover {
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
 
 </style>

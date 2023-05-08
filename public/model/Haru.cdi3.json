@@ -112,6 +112,16 @@
 			"Name": "右眉　変形"
 		},
 		{
+			"Id": "ParamMouthForm",
+			"GroupId": "ParamGroupMouth",
+			"Name": "口　変形"
+		},
+		{
+			"Id": "ParamMouthOpenY",
+			"GroupId": "ParamGroupMouth",
+			"Name": "口　開閉"
+		},
+		{
 			"Id": "ParamScarf",
 			"GroupId": "ParamGroup2",
 			"Name": "スカーフ揺れ"
@@ -218,7 +228,11 @@
 			"GroupId": "",
 			"Name": "眉毛"
 		},
-
+		{
+			"Id": "ParamGroupMouth",
+			"GroupId": "",
+			"Name": "口"
+		},
 		{
 			"Id": "ParamGroup2",
 			"GroupId": "",
@@ -263,6 +277,10 @@
 		{
 			"Id": "Part01Nose001",
 			"Name": "鼻"
+		},
+		{
+			"Id": "Part01Mouth001",
+			"Name": "口"
 		},
 		{
 			"Id": "Part01Face001",
