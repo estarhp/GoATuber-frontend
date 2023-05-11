@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="text-align: center;" @mouseover.once="resume">
+  <div id="app" style="text-align: center;">
     <div class="button" v-show="showButton" >
       <el-button  @click="amplify" v-show="showButton"  type="info" round style="height: 11vh;width: 10vw;font-size: 4vh;line-height: 0vh;border-radius: 5.5vh">放大</el-button>
       <el-button  @click="reduce" v-show="showButton" type="info" round style="height: 11vh;width: 10vw;font-size: 4vh;line-height: 0vh;border-radius: 5.5vh">缩小</el-button>
@@ -32,7 +32,7 @@ export default {
   data(){
   return{
 
-   websock:"",
+    websock:"",
     model4:"",
     playing:false,
     audioCtx:"",
@@ -100,11 +100,7 @@ export default {
     this.websock.close(); //离开路由之后断开websocket连接
   },
   methods:{
-    resume(){
-      this.audioCtx.resume()
 
-    }
-    ,
     reduce(){
       if(this.scale<=0.2){
         return
@@ -165,7 +161,7 @@ export default {
     },
     websocketonmessage(event){
       let data=JSON.parse(event.data)
-      this.getWav(data.voice,data.mood)
+      this.getWav(data)
 
     },
     websocketonopen(){
@@ -243,9 +239,9 @@ export default {
       setTimeout(this.run,1);
     },
     arrayAdd(a){return a.reduce((i,a)=>i+a,0)},
-    getWav(url,mood){
+    getWav(data){
       axios({
-        url:url,
+        url:data.voice,
         method:"get",
         responseType:"arraybuffer"
       }).then(response=> {
@@ -275,8 +271,8 @@ export default {
           this.run()
 
 
-          this.model4.expression(mood)
-          this.model4.motion("TapBody")
+          this.model4.expression(data.expression)
+          this.model4.motion(data["act"],data["movement"])
           debugger;
 
 
@@ -287,9 +283,7 @@ export default {
             // 停止播放
 
             this.playing = false;
-            this.websock.send(JSON.stringify({
-              message:"ended",type:"successful"
-            }))
+            this.websock.send(0)
 
 
 
