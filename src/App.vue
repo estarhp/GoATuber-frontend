@@ -1,8 +1,9 @@
 <template>
   <div id="app" style="text-align: center;" @mouseover.once="resume">
-    <div class="button" @click="amplify" >放大</div>
-
-    <div class="button" @click="reduce">缩小</div>
+    <div class="button" v-show="showButton" >
+      <el-button  @click="amplify" v-show="showButton"  type="info" round style="height: 11vh;width: 10vw;font-size: 4vh;line-height: 0vh;border-radius: 5.5vh">放大</el-button>
+      <el-button  @click="reduce" v-show="showButton" type="info" round style="height: 11vh;width: 10vw;font-size: 4vh;line-height: 0vh;border-radius: 5.5vh">缩小</el-button>
+    </div>
     <canvas ref="live2d"
             @mousedown="handleMouseDown"
             @mousemove="handleMouseMove"
@@ -41,31 +42,48 @@ export default {
     isDragging: false,
     lastX: 0,
     lastY: 0,
-    scale:1
+    scale:1,
+    showButton:true
 
   }
   },
   mounted() {
-  window.PIXI=PIXI;
+    window.PIXI = PIXI;
 
 
-    this.$on("start",this.getWav);
+    this.$on("start", this.getWav);
 
-    (async ()=>{
-     await this.createModel()
+    (async () => {
+      await this.createModel()
 
       this.createAnalyser()
 
 
     })()
 
-    window.onresize=()=>{
-
-
-      this.model4.x=this.$refs.live2d.clientWidth/2-this.model4.width/2
+    window.onresize = () => {
+      this.model4.x = this.$refs.live2d.clientWidth / 2 - this.model4.width / 2
 
 
     }
+
+
+    document.addEventListener("keydown", (events) => {
+          if(events.code=="ArrowLeft"){
+            this.showButton=false
+          }
+          if(events.code=="ArrowRight"){
+            this.showButton=true
+          }
+          if(events.code=="ArrowUp"){
+            this.amplify()
+          }
+          if(events.code=="ArrowDown"){
+            this.reduce()
+          }
+        }
+    )
+
 
 
     // window.onclick=()=>{
@@ -161,7 +179,12 @@ export default {
     },
     async createModel(){
 
-      this.model4 = await Live2DModel.from("./model/Haru.model3.json",{ autoUpdate: true });
+      let modelName=await axios({
+        url:"/get",
+        method:"get"
+      })
+
+      this.model4 = await Live2DModel.from("./model/"+modelName.data,{ autoUpdate: true });
       this.set=this.model4.internalModel.coreModel.setParameterValueById
       this.app = new PIXI.Application({
         view: this.$refs.live2d,
@@ -310,20 +333,11 @@ body {
 }
 
 .button {
-  height: 5vh;
-  width: 5vw;
-  background: #E6A23C;
-  margin-bottom: 10px;
-  border-radius: 60px;
-  font-size: 3vh;
-  position: relative;
+  position: absolute;
+  text-align: left;
   z-index: 100;
   cursor: pointer
 }
-#live2d:hover {
-  cursor: pointer;
-  position: relative;
-  z-index: 5;
-}
+
 
 </style>
