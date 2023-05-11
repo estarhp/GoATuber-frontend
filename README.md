@@ -1,4 +1,5 @@
 # live2d
+live2d 前端(ws 接收后端消息控制：动作、语音、表情，口型同步)
 
 ## Project setup
 ```
