@@ -209,11 +209,8 @@ export default {
     },
     createAnalyser() {
       this.audioCtx = new AudioContext();
-
-
       // 新建分析仪
       this.analyser = this.audioCtx.createAnalyser();
-
       // 根据 频率分辨率建立个 Uint8Array 数组备用
       this.frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
       // 取音频文件成 arraybuffer
@@ -238,66 +235,64 @@ export default {
 
       setTimeout(this.run,1);
     },
+    base64ToArrayBuffer(base64) {
+              let binary_string =  window.atob(base64);
+              let len = binary_string.length;
+              let bytes = new Uint8Array( len );
+              for (let i = 0; i < len; i++)        {
+                bytes[i] = binary_string.charCodeAt(i);
+              }
+              return bytes.buffer;
+   },
     arrayAdd(a){return a.reduce((i,a)=>i+a,0)},
-    getWav(data){
-      axios({
-        url:data.voice,
-        method:"get",
-        responseType:"arraybuffer"
-      }).then(response=> {
+    async getWav(data){
+      let response
+
+      switch (data["VType"]) {
+        case 1 :
+          response =  await axios({
+          url:data.voice,
+          method:"get",
+          responseType:"arraybuffer"
+        })
+          response = response.data
+           break
+        case 2 :
+          response = this.base64ToArrayBuffer(data.voice)
+      }
 
 
 
-        const audioData = response.data;
+      ((response) => {
+
+        const audioData = response;
         this.audioCtx.decodeAudioData(audioData, (buffer)=>{
-
           // 新建 Buffer 源
-
           const source = this.audioCtx.createBufferSource();
           source.buffer = buffer;
-
           // 连接到 audioCtx
-
           source.connect(this.audioCtx.destination);
           // 连接到 音频分析器
-
           source.connect(this.analyser);
-
           window.navigator.mediaDevices.getUserMedia({ audio: true });
           // 开始播放
-
-
           this.playing = true;
           this.run()
-
-
           this.model4.expression(data.expression)
           this.model4.motion(data["act"],data["movement"])
           debugger;
-
-
           source.start(0);
-
-
           source.onended = ()=>{
             // 停止播放
-
             this.playing = false;
             this.websock.send(0)
-
-
-
             this.model4.expression(0);
-
-
           }
         }).catch(error => {
           console.log(error)
           this.websock.send(-1)
         })
-
-
-      })
+      })(response)
   },
 
 
