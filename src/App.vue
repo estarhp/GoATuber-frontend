@@ -257,8 +257,11 @@ export default {
         })
           response = response.data
            break
-        case 2 :
+        case 2  :
           response = this.base64ToArrayBuffer(data.voice)
+        case 3  :
+          response = this.base64ToArrayBuffer(data.voice)
+
       }
 
 
