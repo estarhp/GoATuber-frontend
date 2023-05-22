@@ -16,9 +16,9 @@
 <script>
 
 import * as PIXI from 'pixi.js';
-import { Live2DModel } from 'pixi-live2d-display/cubism4';
+import { Live2DModel } from './pixi-live2d-display/dist/cubism4.es';
 import axios from "axios"
-import { config } from 'pixi-live2d-display';
+import { config } from './pixi-live2d-display';
 
 // log level
 config.logLevel = config.LOG_LEVEL_WARNING; // LOG_LEVEL_VERBOSE, LOG_LEVEL_ERROR, LOG_LEVEL_NONE
@@ -43,7 +43,8 @@ export default {
     lastX: 0,
     lastY: 0,
     scale:1,
-    showButton:true
+    showButton:true,
+    parameterIndex:""
 
   }
   },
@@ -87,7 +88,11 @@ export default {
 
 
     // window.onclick=()=>{
-    //   this.getWav("synthesize.wav")
+    //   this.getWav({
+    //     voice :"synthesize.wav",
+    //     VType:1
+    //   })
+    //   console.log(123)
     // }
 
   }
@@ -175,12 +180,15 @@ export default {
     },
     async createModel(){
 
-      let modelName=await axios({
+      let modelName= await axios({
         url:"/get",
         method:"get"
+      }).catch( err => {
+        console.log(err)
+
       })
 
-      this.model4 = await Live2DModel.from("./model/"+modelName.data,{ autoUpdate: true });
+      this.model4 = await Live2DModel.from("./model/"+ "hijiki.model3.json",{ autoUpdate: true });
       this.set=this.model4.internalModel.coreModel.setParameterValueById
       this.app = new PIXI.Application({
         view: this.$refs.live2d,
@@ -195,14 +203,28 @@ export default {
       this.model4.x=this.$refs.live2d.clientWidth/2-this.model4.width/2
 
 
+      if (this.model4.internalModel.coreModel._parameterIds.includes("ParamMouthOpenY")){
+        this.parameterIndex = this.model4.internalModel.coreModel.getParameterIndex("ParamMouthOpenY")
+      }
+
+      if (this.model4.internalModel.coreModel._parameterIds.includes("PARAM_MOUTH_OPEN_Y")){
+        this.parameterIndex = this.model4.internalModel.coreModel.getParameterIndex("PARAM_MOUTH_OPEN_Y")
+      }
+
+      if (this.model4.internalModel.coreModel._parameterIds.includes("ParamMouthA")){
+        this.parameterIndex = this.model4.internalModel.coreModel.getParameterIndex("ParamMouthA")
+      }
+
+
 
 
     },
     setMouthOpenY(v){
       v = Math.max(0, Math.min(1, v));
+      console.log(v)
 
 
-      this.model4.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', v,1,true)
+      this.model4.internalModel.coreModel.setParameterValueByIndex(this.parameterIndex, v,1,true)
 
 
 
@@ -227,13 +249,13 @@ export default {
 
       const arr = [];
       // 频率范围还是太广了，跳采！
-      for (var i = 0; i < 1000; i += this.o) {
+      for (var i = 0; i < 800; i += this.o) {
         arr.push(frequencyData[i]);
       }
 
-      this.setMouthOpenY((this.arrayAdd(arr)/arr.length - 20)/6);
+      this.setMouthOpenY((this.arrayAdd(arr)/arr.length - 20)/30);
 
-      setTimeout(this.run,1);
+      setTimeout(this.run,1000/60);
     },
     base64ToArrayBuffer(base64) {
               let binary_string =  window.atob(base64);
@@ -279,12 +301,18 @@ export default {
           source.connect(this.analyser);
           window.navigator.mediaDevices.getUserMedia({ audio: true });
           // 开始播放
+
           this.playing = true;
           this.run()
+         setTimeout(() => {
+           source.start(0);
+         },0.5)
+
           this.model4.expression(data.expression)
           this.model4.motion(data["act"],data["movement"])
-          debugger;
-          source.start(0);
+
+
+
           source.onended = ()=>{
             // 停止播放
             this.playing = false;
