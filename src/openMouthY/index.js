@@ -24,6 +24,7 @@ export  async function getWav(data,store){
             })
             response = response.data
             break
+        //如果为 2 和 3 则需要转化为arraybuffer
         case 2  :
             break
             response = base64ToArrayBuffer(data.voice)
@@ -54,7 +55,7 @@ export  async function getWav(data,store){
             setTimeout(() => {
                 source.start(0);
             },0.5)
-
+ //调用相应地动作和表情
             store.model4.expression(data.expression)
             store.model4.motion(data["act"],data["movement"])
 
@@ -63,6 +64,7 @@ export  async function getWav(data,store){
             source.onended = ()=>{
                 // 停止播放
                playing = false;
+               //清空model 的动作和表情
                 store.state.websocket.send(0)
                 store.model4.expression(0);
             }
@@ -85,16 +87,17 @@ export  async function getWav(data,store){
             arr.push(frequencyData[i]);
         }
 
-        setMouthOpenY((arrayAdd(arr)/arr.length - 20)/store.percentage,store);
+        setMouthOpenY((arrayAdd(arr)/arr.length - 20)/store.percentage);
 
-        setTimeout(run,1000/60);
+        setTimeout(run,1000/60);//相隔一段时间执行
     }
 
     function setMouthOpenY(v){
+        //去除调小于0和大于1的值
         v = Math.max(0, Math.min(1, v));
         console.log(v)
 
-
+        //mouthOpenY参数
         store.model4.internalModel.coreModel.setParameterValueByIndex(store.parameterIndex, v,1,true)
 
 

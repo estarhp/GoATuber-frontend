@@ -20,6 +20,7 @@ export default defineComponent({
         this.$refs.per.style.width = `${this.percentage}%`
       })
     },
+    //添加进度条的点击事件
     mouseDown(e){
 
       this.$store.state.percentage = e.offsetX/this.$refs.per.parentElement.clientWidth * 100
@@ -41,9 +42,13 @@ export default defineComponent({
     }
   },
 
+
   watch:{
     percentage:{
       handler(newValue){
+        if (typeof newValue != 'number'){
+          this.percentage = 60
+        }
         this.$refs.per.style.width = `${this.percentage}%`
         window.localStorage.setItem("percentage",newValue)
 
@@ -51,6 +56,11 @@ export default defineComponent({
     },
     scale:{
       handler(newValue){
+
+        if (typeof newValue != 'number'){
+          this.percentage = 1
+        }
+
         window.localStorage.setItem("scale",newValue)
       }
     }

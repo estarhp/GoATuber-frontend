@@ -3,7 +3,7 @@ let websocket
 import {Message} from "element-ui";
 export  default  function  initWebSocket() {
     //初始化weosocket
-    const wsuri = `ws://127.0.01:9000/live2d`;
+    const wsuri = `ws://${location.host}/live2d`;
 
     websocket = new WebSocket(wsuri);
 

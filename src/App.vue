@@ -40,39 +40,37 @@ export default {
   }
   },
   mounted() {
-    this.$on("start", getWav);
-
+    //load live2d model
     (async () => {
       this.$store.state.app = await createModel(this.$store.state,this.$refs.live2d)
-
+      //create analyser
       createAnalyser()
-
-
     })()
+    //addlistener for the window resizing
     window.onresize = () => {
       this.$store.state.model4.x = this.$refs.live2d.clientWidth / 2 -this.$store.state.model4.width / 2
     }
 
-
+// put the canvas dom-element in the state
     this.$store.state.live2d = this.$refs.live2d
+// test the mouthOpen
+//     this.$refs.live2d.onclick=()=>{
+//       getWav({
+//         voice :"synthesize.wav",
+//         VType:1
+//       },this.$store.state)
 
-    this.$refs.live2d.onclick=()=>{
-      getWav({
-        voice :"synthesize.wav",
-        VType:1
-      },this.$store.state)
-
-    }
+    // }
 
   }
   ,
   created() {
+    // init the ws
     this.$store.state.websocket = initWebSocket()
-
+// async add a callback function for the message
    setTimeout(()=>{
      this.$store.state.websocket.onmessage =
          (event) => {
-
            let data=JSON.parse(event.data)
            getWav(data)
 
@@ -83,7 +81,7 @@ export default {
     this.$store.state.websocket.close(); //离开路由之后断开websocket连接
   },
   methods:{
-
+    //add drag
     handleMouseDown(event) {
       this.isDragging = true;
       this.lastX = event.clientX;
@@ -127,6 +125,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
 }
+
 
 
 </style>

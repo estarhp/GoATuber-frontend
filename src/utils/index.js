@@ -1,3 +1,4 @@
+// a function for converting  base64 to ArrayBuffer
 export  function base64ToArrayBuffer(base64) {
     let binary_string =  window.atob(base64);
     let len = binary_string.length;
@@ -7,5 +8,5 @@ export  function base64ToArrayBuffer(base64) {
     }
     return bytes.buffer;
 }
-
+// a function for adding the every number in the array
 export function arrayAdd(a){return a.reduce((i,a)=>i+a,0)}
