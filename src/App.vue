@@ -72,7 +72,7 @@ export default {
      this.$store.state.websocket.onmessage =
          (event) => {
            let data=JSON.parse(event.data)
-           getWav(data)
+           getWav(data,this.$store.state)
 
          }
     })

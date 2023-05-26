@@ -65,12 +65,12 @@ export  async function getWav(data,store){
                 // 停止播放
                playing = false;
                //清空model 的动作和表情
-                store.state.websocket.send(0)
+                store.websocket.send(0)
                 store.model4.expression(0);
             }
         }).catch(error => {
             console.log(error)
-            store.state.websocket.send(-1)
+            store.websocket.send(-1)
         })
     })(response)
 
