@@ -15,6 +15,8 @@ Vue.use(ButtonGroup)
 Vue.use(Input)
 
 
+
+
 new Vue({
   render: h => h(App),
   beforeCreate() {
@@ -23,4 +25,8 @@ new Vue({
   store,
 
 
-}).$mount('#app')
+}).$mount('#app');
+
+
+
+
