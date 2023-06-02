@@ -112,7 +112,7 @@ export function createAnalyser() {
         .then(function(stream) {
             // 麦克风授权成功，此时用户已与页面进行了交互
             // 创建 AudioContext 对象
-            const  audioCtx = new AudioContext();
+            audioCtx = new AudioContext();
             // 处理音频流
 
             // audioCtx = new AudioContext();
