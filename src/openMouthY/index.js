@@ -108,23 +108,49 @@ export  async function getWav(data,store){
 
 export function createAnalyser() {
 
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(function(stream) {
-            // 麦克风授权成功，此时用户已与页面进行了交互
-            // 创建 AudioContext 对象
-            audioCtx = new AudioContext();
-            // 处理音频流
+   if(navigator.userAgent.indexOf("Firefox") != -1 || navigator.userAgent.indexOf("Chrome") != -1){
+       navigator.mediaDevices.getUserMedia({ audio: true })
+           .then(function(stream) {
+               // 麦克风授权成功，此时用户已与页面进行了交互
+               // 创建 AudioContext 对象
+               audioCtx = new AudioContext();
+               // 处理音频流
 
-            // audioCtx = new AudioContext();
-            // 新建分析仪
-            analyser =audioCtx.createAnalyser();
-            // 根据 频率分辨率建立个 Uint8Array 数组备用
-            frequencyData = new Uint8Array(analyser.frequencyBinCount);
-            // 取音频文件成 arraybuffer
-        })
-        .catch(function(err) {
-            alert('未授予音频权限或发生错误：' + err.name+",请将sound(autoplay)权限改为allow");
-        });
+               // audioCtx = new AudioContext();
+               // 新建分析仪
+               analyser =audioCtx.createAnalyser();
+               // 根据 频率分辨率建立个 Uint8Array 数组备用
+               frequencyData = new Uint8Array(analyser.frequencyBinCount);
+               // 取音频文件成 arraybuffer
+           })
+           .catch(function(err) {
+               alert('未授予音频权限或发生错误：' + err.name+",请将sound(autoplay)权限改为allow");
+
+               audioCtx = new AudioContext();
+               // 处理音频流
+
+               // audioCtx = new AudioContext();
+               // 新建分析仪
+               analyser =audioCtx.createAnalyser();
+               // 根据 频率分辨率建立个 Uint8Array 数组备用
+               frequencyData = new Uint8Array(analyser.frequencyBinCount);
+               // 取音频文件成 arraybuffer
+
+           });
+
+
+
+   }else {
+       audioCtx = new AudioContext();
+       // 处理音频流
+
+       // audioCtx = new AudioContext();
+       // 新建分析仪
+       analyser =audioCtx.createAnalyser();
+       // 根据 频率分辨率建立个 Uint8Array 数组备用
+       frequencyData = new Uint8Array(analyser.frequencyBinCount);
+       // 取音频文件成 arraybuffer
+   }
 
 
 }
