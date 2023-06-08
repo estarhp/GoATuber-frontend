@@ -45,11 +45,12 @@ export default {
       this.$store.state.app = await createModel(this.$store.state,this.$refs.live2d)
       //create analyser
       createAnalyser()
+      window.onresize = () => {
+        this.$store.state.model4.x = this.$refs.live2d.clientWidth / 2 -this.$store.state.model4.width / 2
+      }
     })()
     //addlistener for the window resizing
-    window.onresize = () => {
-      this.$store.state.model4.x = this.$refs.live2d.clientWidth / 2 -this.$store.state.model4.width / 2
-    }
+
 
 // put the canvas dom-element in the state
     this.$store.state.live2d = this.$refs.live2d
