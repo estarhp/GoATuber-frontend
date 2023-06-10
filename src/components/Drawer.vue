@@ -49,9 +49,13 @@ export default defineComponent({
         if (typeof newValue != 'number'){
           this.percentage = 60
         }
+
         this.$refs.per.style.width = `${this.percentage}%`
         window.localStorage.setItem("percentage",newValue)
 
+      },
+      set(newValue){
+        this.percentage = newValue.toFixed(2)
       }
     },
     scale:{
@@ -98,14 +102,15 @@ export default defineComponent({
         :with-header="false"
         direction="ltr"
     >
-
+     <h4 style="margin-bottom: -20px">模型大小控制</h4>
       <div class="button" >
         <el-button  @click="$store.dispatch('amplify',live2d)"  type="primary" round style="height: 7vh;width: 8vw;font-size: 2vh;line-height: 0vh;border-radius: 3.5vh" >放大</el-button>
         <el-button  @click="$store.dispatch('reduce',live2d)"  type="primary" round style="height: 7vh;width: 8vw;font-size: 2vh;line-height: 0vh;border-radius: 3.5vh">缩小</el-button>
       </div>
 
 
-
+      <div style="margin-bottom: 30px"></div>
+      <h4>嘴型控制</h4>
       <div class="percentage"
            @mousedown="mouseDown"
 
@@ -115,8 +120,16 @@ export default defineComponent({
 
 
         ></div>
+
       </div>
 
+      <el-tooltip placement="top">
+        <div slot="content">数值越小，嘴越容易张开。<br>当模型说话嘴型奇怪时，请适当改变数值。<br>支持小数微调</div>
+        <i class="el-icon-question" style="font-size: 3vh;line-height: 3vh;color: gray"></i>
+      </el-tooltip>
+
+
+      <div style="margin-bottom: 40px"></div>
       <el-button-group>
         <el-button icon="el-icon-minus"
                    @click="$store.dispatch('decrease')"
@@ -149,11 +162,7 @@ export default defineComponent({
   margin-top: 8vh;
 }
 
-.el-drawer__body {
-  background-image: url("@/../public/drawer.webp");
-  background-size: cover;
-  background-repeat: no-repeat;
-}
+
 
 .show_setting {
   position: relative;
@@ -173,14 +182,14 @@ export default defineComponent({
 
   width: 25vw;
   height: 1vh;
-  background: white;
-  margin-top: 10vh;
+  background: beige;
   position: relative;
-  left: 50%;
+  left: 40%;
   transform: translateX(-50%);
   border-radius: 0.5vh;
   overflow: hidden;
-  margin-bottom: 3vh;
+  display: inline-block;
+
 
 }
 
@@ -189,4 +198,7 @@ export default defineComponent({
   background:rgba(64,158,255,1);
 }
 
+h4 {
+  color: gray;
+}
 </style>

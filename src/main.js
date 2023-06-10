@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import {Button, ButtonGroup, Drawer, Input, Message, Progress} from "element-ui";
+import {Button, ButtonGroup, Drawer, Input, Message, Progress, Tooltip} from "element-ui";
 
 import store from './store'
 
@@ -13,6 +13,7 @@ Vue.use(Drawer)
 Vue.use(Progress)
 Vue.use(ButtonGroup)
 Vue.use(Input)
+Vue.use(Tooltip)
 
 
 
