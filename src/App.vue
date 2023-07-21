@@ -13,7 +13,7 @@
 <script setup>
 import {ref,onMounted,onBeforeUnmount,onBeforeMount} from "vue"
 
-import { config } from 'pixi-live2d-display';
+import { config } from './pixi-live2d-display';
 import Drawer from "./components/Drawer.vue";
 import initWebSocket from "./ws";
 import {createAnalyser} from "./openMouthY";

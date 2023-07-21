@@ -8,7 +8,7 @@ let websocket
 export  default  function  initWebSocket() {
     const store = useStore()
     //初始化weosocket
-    const wsuri = `ws://${location.host}/live2d`;
+    const wsuri = `ws://localhost:9000/live2d`;
 
     websocket = new WebSocket(wsuri);
 
@@ -22,7 +22,7 @@ export  default  function  initWebSocket() {
 
     websocket.onmessage =(event) => {
             let data=JSON.parse(event.data)
-            getWav(data, store.state).catch(err =>{
+            getWav(data,store).catch(err =>{
                 console.error(err)
             })
         }

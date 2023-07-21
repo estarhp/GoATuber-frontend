@@ -1,5 +1,6 @@
 import axios from "axios";
 import {base64ToArrayBuffer,arrayAdd} from "../utils/index.js"
+import {useStore} from "vuex";
 
 
 let audioCtx
@@ -14,6 +15,7 @@ let o = 80
 
 export  async function getWav(data,store){
     let response
+
 
     switch (data["VType"]) {
         case 1 :
@@ -56,8 +58,8 @@ export  async function getWav(data,store){
                 source.start(0);
             },0.5)
  //调用相应地动作和表情
-            store.model4.expression(data.expression)
-            store.model4.motion(data["act"],data["movement"])
+            store.state.model4.expression(data.expression)
+            store.state.model4.motion(data["act"],data["movement"])
 
 
 
@@ -65,12 +67,12 @@ export  async function getWav(data,store){
                 // 停止播放
                playing = false;
                //清空model 的动作和表情
-                store.websocket.send(0)
-                store.model4.expression(0);
+                store.state.websocket.send(0)
+                store.state.model4.expression(0);
             }
         }).catch(error => {
             console.log(error)
-            store.websocket.send(-1)
+            store.state.websocket.send(-1)
         })
     })(response)
 
@@ -87,7 +89,7 @@ export  async function getWav(data,store){
             arr.push(frequencyData[i]);
         }
 
-        setMouthOpenY((arrayAdd(arr)/arr.length - 20)/store.percentage);
+        setMouthOpenY((arrayAdd(arr)/arr.length - 20)/store.state.percentage);
 
         setTimeout(run,1000/60);//相隔一段时间执行
     }
@@ -98,7 +100,7 @@ export  async function getWav(data,store){
         console.log(v)
 
         //mouthOpenY参数
-        store.model4.internalModel.coreModel.setParameterValueByIndex(store.parameterIndex, v,1,true)
+        store.state.model4.internalModel.coreModel.setParameterValueByIndex(store.state.parameterIndex, v,1,true)
 
 
     }
