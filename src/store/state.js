@@ -6,7 +6,11 @@ const state = {
         percentage:parseFloat(localStorage.getItem("percentage") || 60),
         scale:parseFloat(localStorage.getItem("scale") || 1) ,
         app:"",
-        live2d:""
+        live2d:"",
+        modelType:"vrm",
+        vrm:{
+
+        }
 }
 
 export default state
