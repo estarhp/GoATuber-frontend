@@ -4,7 +4,7 @@
 
 <script setup>
 
-import {onBeforeMount, onBeforeUnmount} from "vue";
+import {onBeforeMount, onBeforeUnmount,onMounted} from "vue";
 import initWebSocket from "./ws/index.js";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -15,25 +15,23 @@ onBeforeMount(()=> {
   // init the ws
   store.state.websocket = initWebSocket()
 })
-onBeforeMount(async ()=>{
-   await store.dispatch("getModelType")
-   const modelType = store.state.modelType
-  console.log(123)
+onMounted(async ()=>{
+  await store.dispatch("getModelType")
+  const modelType = store.state.modelType
   switch (modelType.type){
     case 1 :{
       await router.push({
-        path: "/live2d"
+        path: "/live2d",
       })
       break
     }
     case 2 :{
       await router.push({
-        path: "/vrm"
+        path: "/vrm",
       })
       break
     }
   }
-
 })
 onBeforeUnmount(()=>{
   store.state.websocket.close();

@@ -1,6 +1,6 @@
 <script setup lang="js">
-import  "./live2d.min.js"
-import  "./live2dcubismcore.min.js"
+import  "./pixi-live2d-display/dist/live2d.min.js"
+import  "./pixi-live2d-display/dist/live2dcubismcore.min.js"
 import Drawer from "./Live2dDrawer.vue";
 import {ref,onMounted} from "vue"
 import { config } from './pixi-live2d-display';
