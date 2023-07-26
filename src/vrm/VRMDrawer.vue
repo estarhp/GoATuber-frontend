@@ -1,38 +1,9 @@
 <script setup lang="ts">
-
-    import {useStore} from "vuex";
-    import {ref,computed,watch,onMounted} from "vue"
+    import {ref,onMounted} from "vue"
     const drawer =  ref(false)
-    const x = ref(null)
-    const store = useStore()
     function handlerClick(){
       drawer.value = true
     }
-
-
-const live2d = computed(()=>{
-      return store.state.live2d
-})
-
-
-const percentage = computed(()=>{
-  return store.state.percentage
-})
-
-const scale = computed(()=>{
-  return store.state.scale
-})
-
-
-watch(percentage,(newValue,oldValue)=> {
-      window.localStorage.setItem("percentage",parseFloat(newValue))
-      console.log(newValue)
-    })
-watch(scale,(newValue,oldValue)=> {
-      window.localStorage.setItem("scale", parseFloat(newValue))
-      console.log(newValue)
-    })
-
 
 onMounted(()=>{
   document.addEventListener("keydown", (events) => {
@@ -41,12 +12,6 @@ onMounted(()=>{
         }
         if(events.code==="ArrowRight"){
           drawer.value=true
-        }
-        if(events.code==="ArrowUp"){
-          store.dispatch("amplify")
-        }
-        if(events.code==="ArrowDown"){
-          store.dispatch("reduce")
         }
       }
   )
