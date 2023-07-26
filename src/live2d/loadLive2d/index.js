@@ -8,21 +8,10 @@ window.PIXI = PIXI;
 
 export default async function createModel(live2d){
     const store = useStore()
-//for the modelName
-    let modelName= await axios({
-      url:"/get",
-      method:"get"
-    }).catch( err => {
-      console.log(err)
 
-    }) || {};
-    //load the live2d model and add the  model on the state
-    const model4 = await Live2DModel.from("/live2d/"+ (modelName.data || "mao_pro_t03.model3.json"),{ autoUpdate: true })
-    // this.set=this.model4.
-    //     internalModel.coreModel.
-    //     setParameterValueById
+    const modelName = store.state.modelType.name
 
-    //set the scale of model
+    const model4 = await Live2DModel.from("/live2d/"+ (modelName || "mao_pro_t03.model3.json"),{ autoUpdate: true })
 
     store.state.model4 = model4
     store.state.model4.scale.set(store.state.scale)
@@ -35,13 +24,7 @@ export default async function createModel(live2d){
         backgroundAlpha:0
     });
 
-
-
-
-
     app.stage.addChild(model4);
-
-
 
 
 //adapt defferent parameterIds of models
@@ -58,9 +41,5 @@ export default async function createModel(live2d){
     }
 
     return app
-
-
-
-
 }
 

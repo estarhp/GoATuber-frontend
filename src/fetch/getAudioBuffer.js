@@ -1,7 +1,7 @@
 import axios from "axios";
 import {base64ToArrayBuffer} from "../utils/index.js";
 
-export default  async function  getBuffer(data){
+export default async function  getBuffer(data){
     let response
 
     switch (data["VType"]) {

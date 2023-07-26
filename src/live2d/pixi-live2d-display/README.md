@@ -67,17 +67,17 @@ a [CDN link](https://cdn.jsdelivr.net/gh/dylanNew/live2d/webgl/Live2D/lib/live2d
 The plugin provides individual bundles for each Cubism version to reduce your app's size when you just want to use one
 of the versions.
 
-Specifically, there are `cubism2.js` and `cubism4.js` for respective runtime, along with an `index.js` that includes
+Specifically, there are `cubism2.js` and `cubism4.js` for respective runtime, along with an `getAudioBuffer.js` that includes
 both of them.
 
-Note that if you want both the Cubism 2.1 and Cubism 4 support, use `index.js`, but _not_ the combination
+Note that if you want both the Cubism 2.1 and Cubism 4 support, use `getAudioBuffer.js`, but _not_ the combination
 of `cubism2.js` and `cubism4.js`.
 
 To make it clear, here's how you would use these files:
 
 -   Use `cubism2.js`+`live2d.min.js` to support Cubism 2.1 models
 -   Use `cubism4.js`+`live2dcubismcore.min.js` to support Cubism 3 and Cubism 4 models
--   Use `index.js`+`live2d.min.js`+`live2dcubismcore.min.js` to support all versions of models
+-   Use `getAudioBuffer.js`+`live2d.min.js`+`live2dcubismcore.min.js` to support all versions of models
 
 ## Installation
 

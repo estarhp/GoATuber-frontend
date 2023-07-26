@@ -9,10 +9,6 @@ const routes = [
     {
         path:"/vrm",
         component: VRM
-    },
-    {
-        path:"/",
-        redirect:"/vrm"
     }
 ]
 

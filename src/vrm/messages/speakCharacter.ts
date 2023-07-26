@@ -1,6 +1,7 @@
 import {Viewer} from "../vrmViewer/viewer";
 //@ts-ignore
-import getBuffer from "../../fetch/index.js"
+import getBuffer from "../../fetch/getAudioBuffer";
+
 
 
 const createSpeakCharacter = () => {

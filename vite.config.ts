@@ -15,4 +15,12 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     }),
   ],
+  server: {
+    proxy:{
+      "/get":{
+        target:"http://localhost:9000",
+        changeOrigin: true,
+      }
+    }
+  }
 })

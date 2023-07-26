@@ -59,15 +59,15 @@ Cubism 2.1 需要加载 `live2d.min.js`，[从 2019/9/4 起](https://help.live2d
 
 该插件为每个 Cubism 版本提供了单独的打包文件，从而在你只想使用其中一个版本的时候减少需要加载文件的大小。
 
-具体来说，为两种版本分别提供了 `cubism2.js` 和 `cubism4.js`，以及一个同时包含了两种版本的 `index.js`
+具体来说，为两种版本分别提供了 `cubism2.js` 和 `cubism4.js`，以及一个同时包含了两种版本的 `getAudioBuffer.js`
 
-注意，如果你想同时支持 Cubism 2.1 和 Cubism 4 的话，请使用 `index.js`，_而不要同时使用_ `cubism2.js` 和 `cubism4.js`
+注意，如果你想同时支持 Cubism 2.1 和 Cubism 4 的话，请使用 `getAudioBuffer.js`，_而不要同时使用_ `cubism2.js` 和 `cubism4.js`
 
 为了更明确一点，这里列出使用这些文件的方法：
 
 -   使用 `cubism2.js`+`live2d.min.js` 以支持 Cubism 2.1 模型
 -   使用 `cubism4.js`+`live2dcubismcore.min.js` 以支持 Cubism 3 和 Cubism 4 模型
--   使用 `index.js`+`live2d.min.js`+`live2dcubismcore.min.js` 以支持所有版本的模型
+-   使用 `getAudioBuffer.js`+`live2d.min.js`+`live2dcubismcore.min.js` 以支持所有版本的模型
 
 ## 安装
 

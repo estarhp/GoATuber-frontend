@@ -7,10 +7,14 @@ const state = {
         scale:parseFloat(localStorage.getItem("scale") || 1) ,
         app:"",
         live2d:"",
-        modelType:"vrm",
+        modelType:{
+                type:undefined,
+                name:undefined
+        },
         vrm:{
 
         }
 }
+
 
 export default state

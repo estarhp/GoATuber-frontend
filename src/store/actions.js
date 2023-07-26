@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const actions = {
         reduce(context,live2d){
             // ensure the scale is a number
@@ -37,7 +39,14 @@ const actions = {
             live2d.height=context.state.model4.height
             context.state.app.resizeTo=live2d
         },
+        async getModelType(context){
+            const  result  = await axios({
+                url:"/get",
+                method:"GET"
+            })
 
+            context.commit("getModelType",result.data)
+        }
 
 
 }

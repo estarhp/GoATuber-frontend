@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import {useStore} from "vuex";
-import Drawer from "./VRMDrawer.vue";
+import VRMDrawer from "./VRMDrawer.vue";
 import {Viewer} from "./loadVRM/viewer.ts";
 
 
@@ -11,13 +11,14 @@ const store = useStore()
 
 onMounted(()=>{
 
-   const viewer = new Viewer()
+  const viewer = new Viewer()
+  const modelName = store.state.modelType.name
 
   store.state.viewer = viewer
 
   if (canvas) {
     viewer.setup(canvas.value);
-    viewer.loadVrm("/vrm/AvatarSample_B.vrm");
+    viewer.loadVrm("/vrm/"+modelName);
   }
 
 })
@@ -25,7 +26,7 @@ onMounted(()=>{
 </script>
 
 <template>
-  <Drawer></Drawer>
+  <VRMDrawer></VRMDrawer>
   <canvas ref="canvas"></canvas>
 
 </template>

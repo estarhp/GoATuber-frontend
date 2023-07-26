@@ -7,7 +7,7 @@ let websocket
 export  default  function  initWebSocket() {
     const store = useStore()
     //初始化weosocket
-    const wsuri = `ws://localhost:9000/live2d`;
+    const wsuri = `ws://localhost:9000/connect`;
 
     websocket = new WebSocket(wsuri);
 

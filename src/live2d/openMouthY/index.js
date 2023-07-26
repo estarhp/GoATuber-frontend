@@ -1,5 +1,5 @@
 import {arrayAdd} from "../../utils/index.js"
-import getBuffer from "../../fetch/index.js";
+import getBuffer from "../../fetch/getAudioBuffer.js";
 
 
 let audioCtx
