@@ -16,18 +16,25 @@ onBeforeMount(()=> {
   store.state.websocket = initWebSocket()
 })
 onMounted(async ()=>{
+  //获取model name 和 type
   await store.dispatch("getModelType")
   const modelType = store.state.modelType
   switch (modelType.type){
     case 1 :{
       await router.push({
-        path: "/live2d",
+         name:"live2d",
+        params:{
+          modelName:modelType.name
+        }
       })
       break
     }
     case 2 :{
       await router.push({
-        path: "/vrm",
+        name: "vrm",
+        params:{
+          modelName:modelType.name
+        }
       })
       break
     }

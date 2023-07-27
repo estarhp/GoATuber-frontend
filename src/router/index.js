@@ -1,14 +1,22 @@
-import Live2d from "../live2d/Live2d.vue"
-import VRM from "../vrm/VRM.vue";
+const Live2d = () => import( "../live2d/Live2d.vue")
+const VRM =  ()=> import("../vrm/VRM.vue")
+
 import {createRouter, createWebHashHistory} from "vue-router";
 const routes = [
     {
-        path:"/live2d",
-        component:Live2d
+
     },
     {
-        path:"/vrm",
-        component: VRM
+        name:"live2d",
+        path:"/live2d/:modelName",
+        component:Live2d,
+        props:true
+    },
+    {
+        name: "vrm",
+        path:"/vrm/:modelName",
+        component: VRM,
+        props: true
     }
 ]
 

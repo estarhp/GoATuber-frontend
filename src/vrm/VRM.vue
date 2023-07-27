@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 import {useStore} from "vuex";
 import VRMDrawer from "./VRMDrawer.vue";
 import {Viewer} from "./loadVRM/viewer.ts";
@@ -10,17 +10,24 @@ const canvas:any= ref(null)
 
 const store = useStore()
 
+onBeforeMount(()=>{
+  const loading = ElLoading.service({ fullscreen: true })
+  store.commit("setLoading",loading)
+})
 
-onMounted(()=>{
+onMounted(async ()=>{
 
+
+  const route = useRoute()
   const viewer = new Viewer()
-  const modelName = store.state.modelType.name
   store.state.viewer = viewer
-
+  const modelName = route.params.modelName
   if (canvas) {
     viewer.setup(canvas.value);
-    console.log(123)
-    viewer.loadVrm("/vrm/"+modelName);
+    await viewer.loadVrm("/vrm/"+modelName);
+    setTimeout(()=>{
+      store.commit("closeLoading")
+    },1000)
   }
 
 })

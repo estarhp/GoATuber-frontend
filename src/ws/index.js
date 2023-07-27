@@ -28,16 +28,19 @@ export  default  function  initWebSocket() {
     // 连接关闭时触发
     websocket.onclose = websocketClose;
 
+
+
     websocket.onmessage =(event) => {
-            switch (store.state.modelType) {
-                case "live2d" : {
+            const modelType  = store.state.modelType.type
+            switch (modelType) {
+                case 1 : {
                     let data=JSON.parse(event.data)
                     getWav(data,store).catch(err =>{
                         console.error(err)
                     })
                     break;
                 }
-                case "vrm" :{
+                case 2 :{
                     let data=JSON.parse(event.data)
                     speakCharacter(data,store.state.viewer,onStart,onEnd);
                 }
