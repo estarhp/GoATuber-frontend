@@ -1,10 +1,11 @@
 import {getWav} from "../live2d/openMouthY/index.js";
 import {useStore} from "vuex";
 import {speakCharacter} from "../vrm/messages/speakCharacter";
+import viewer from "../vrm/loadVRM";
 
 let websocket
 
-export  default  function  initWebSocket() {
+export function  initWebSocket() {
     const store = useStore()
     //初始化weosocket
     const wsuri = `ws://localhost:9000/connect`;
@@ -42,13 +43,10 @@ export  default  function  initWebSocket() {
                 }
                 case 2 :{
                     let data=JSON.parse(event.data)
-                    speakCharacter(data,store.state.viewer,onStart,onEnd);
+                    speakCharacter(data,viewer,onStart,onEnd);
                 }
             }
         }
-
-
-    return websocket
 }
 
 
@@ -70,4 +68,6 @@ function websocketClose(){
         type: 'warning'
     });
 }
+
+export default websocket
 

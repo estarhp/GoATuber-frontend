@@ -4,17 +4,17 @@
 
 <script setup>
 
-import {onBeforeMount, onBeforeUnmount,onMounted} from "vue";
-import initWebSocket from "./ws/index.js";
+import {onBeforeUnmount,onMounted,onBeforeMount} from "vue";
+import websocket, {initWebSocket} from "./ws/index.js";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 const store = useStore()
 const router = useRouter()
 
-onBeforeMount(()=> {
-  // init the ws
-  store.state.websocket = initWebSocket()
+onBeforeMount(()=>{
+  initWebSocket()
 })
+
 onMounted(async ()=>{
   //获取model name 和 type
   await store.dispatch("getModelType")
@@ -41,7 +41,7 @@ onMounted(async ()=>{
   }
 })
 onBeforeUnmount(()=>{
-  store.state.websocket.close();
+  websocket.close()
   //离开后断开连接
 })
 </script>

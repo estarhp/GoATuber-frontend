@@ -2,7 +2,7 @@
 import {onBeforeMount, onMounted, ref} from "vue";
 import {useStore} from "vuex";
 import VRMDrawer from "./VRMDrawer.vue";
-import {Viewer} from "./loadVRM/viewer.ts";
+import viewer from "./loadVRM";
 import {useRoute} from "vue-router";
 
 
@@ -19,8 +19,6 @@ onMounted(async ()=>{
 
 
   const route = useRoute()
-  const viewer = new Viewer()
-  store.state.viewer = viewer
   const modelName = route.params.modelName
   if (canvas) {
     viewer.setup(canvas.value);
