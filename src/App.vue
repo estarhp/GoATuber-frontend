@@ -5,7 +5,7 @@
 <script setup>
 
 import {onBeforeUnmount,onMounted,onBeforeMount} from "vue";
-import websocket, {initWebSocket} from "./ws/index.js";
+import {initWebSocket} from "./ws/index.js";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
 const store = useStore()
@@ -41,7 +41,7 @@ onMounted(async ()=>{
   }
 })
 onBeforeUnmount(()=>{
-  websocket.close()
+  window.websocket.close()
   //离开后断开连接
 })
 </script>

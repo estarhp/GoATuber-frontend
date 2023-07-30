@@ -1,7 +1,6 @@
 import axios from "axios";
 import {base64ToArrayBuffer} from "../utils/index.js";
 import {useStore} from "vuex";
-import websocket from "../ws/index.js";
 
 export default async function  getBuffer(data){
     let response
@@ -27,7 +26,7 @@ export default async function  getBuffer(data){
         }
     }catch(error) {
         console.error(error)
-       websocket.send(-1)
+        window.websocket.send(-1)
     }
     return response
 }

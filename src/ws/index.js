@@ -3,16 +3,14 @@ import {useStore} from "vuex";
 import {speakCharacter} from "../vrm/messages/speakCharacter";
 import viewer from "../vrm/loadVRM";
 
-let websocket
+window.websocket = null
 
 export function  initWebSocket() {
     const store = useStore()
     //初始化weosocket
     const wsuri = `ws://localhost:9000/connect`;
 
-    websocket = new WebSocket(wsuri);
-
-
+    window.websocket = new WebSocket(wsuri);
 
     const onStart=() => {
 
@@ -20,18 +18,14 @@ export function  initWebSocket() {
     const onEnd=() => {
 
     }
-
-
     // 连接建立时触发
-    websocket.onopen = websocketOnopen;
+    window.websocket.onopen = websocketOnopen;
     // 通信发生错误时触发
-    websocket.onerror = websocketOnerror;
+    window.websocket.onerror = websocketOnerror;
     // 连接关闭时触发
-    websocket.onclose = websocketClose;
+    window.websocket.onclose = websocketClose;
 
-
-
-    websocket.onmessage =(event) => {
+    window.websocket.onmessage =(event) => {
             const modelType  = store.state.modelType.type
             switch (modelType) {
                 case 1 : {
@@ -69,5 +63,5 @@ function websocketClose(){
     });
 }
 
-export default websocket
+
 

@@ -5,35 +5,22 @@ import getBuffer from "../../fetch/getAudioBuffer";
 
 
 const createSpeakCharacter = () => {
-  let prevFetchPromise: Promise<unknown> = Promise.resolve();
-  let prevSpeakPromise: Promise<unknown> = Promise.resolve();
 
-  return (
+
+  return async (
     data:any,
     viewer: Viewer,
     onStart?: () => void,
     onComplete?: () => void
   ) => {
-
-    const fetchPromise = prevFetchPromise.then(async () => {
-
-      return await getBuffer(data)
-    });
-
-    prevFetchPromise = fetchPromise;
-    prevSpeakPromise = Promise.all([fetchPromise, prevSpeakPromise]).then(
-      ([audioBuffer]) => {
-        onStart?.();
-        if (!audioBuffer) {
-          return;
-        }
-        return viewer.model?.speak(audioBuffer);
-      }
-    );
-    prevSpeakPromise.then(() => {
-      onComplete?.();
-    });
-  };
+    const audioBuffer = await getBuffer(data)
+    onStart?.();
+    if (!audioBuffer) {
+      return;
+    }
+    viewer.model?.speak(audioBuffer);
+    onComplete?.();
+  }
 };
 
 export const speakCharacter = createSpeakCharacter();

@@ -6,9 +6,6 @@ import { VRMAnimation } from "../lib/VRMAnimation/VRMAnimation";
 import { VRMLookAtSmootherLoaderPlugin } from "../lib/VRMLookAtSmootherLoaderPlugin/VRMLookAtSmootherLoaderPlugin";
 import { LipSync } from "../lipSync/lipSync";
 import { EmoteController } from "../emoteController/emoteController";
-//@ts-ignore
-import websocket from "../../ws/index.js";
-
 /**
  * 3Dキャラクターを管理するクラス
  */
@@ -76,13 +73,13 @@ export class Model {
         // this.emoteController?.playEmotion(screenplay.expression);
         await new Promise(() => {
             this._lipSync?.playFromArrayBuffer(buffer, () => {
-                //@ts-ignore
-                websocket.send(0)
+             //@ts-ignore
+                window.websocket.send(0)
             });
         }).catch(error =>{
             console.error(error)
             //@ts-ignore
-            websocket.send(-1)
+            window.websocket.send(-1)
         });
     }
 

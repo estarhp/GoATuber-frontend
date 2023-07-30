@@ -1,8 +1,5 @@
 import {arrayAdd} from "../../utils/index.js";
 import getBuffer from "../../fetch/getAudioBuffer.js";
-import websocket from "../../ws/index.js";
-
-
 
 let audioCtx
 
@@ -18,8 +15,6 @@ export  async function getWav(data,store){
     let response
 
     response = await getBuffer(data)
-
-
 
     const audioData = response;
     audioCtx.decodeAudioData(audioData, (buffer)=>{
@@ -42,18 +37,16 @@ export  async function getWav(data,store){
         store.state.model4.expression(data.expression)
         store.state.model4.motion(data["act"],data["movement"])
 
-
-
         source.onended = ()=>{
             // 停止播放
            playing = false;
            //清空model 的动作和表情
-            websocket.send(0)
+            window.websocket.send(0)
             store.state.model4.expression(0);
         }
     }).catch(error => {
         console.log(error)
-        websocket.send(-1)
+        window.websocket.send(-1)
     })
 
 
@@ -78,11 +71,9 @@ export  async function getWav(data,store){
     function setMouthOpenY(v){
         //去除调小于0和大于1的值
         v = Math.max(0, Math.min(1, v));
-        console.log(v)
 
         //mouthOpenY参数
         store.state.model4.internalModel.coreModel.setParameterValueByIndex(store.state.parameterIndex, v,1,true)
-
 
     }
 
@@ -122,8 +113,6 @@ export function createAnalyser() {
                     // 取音频文件成 arraybuffer
 
                 });
-
-
 
         }else {
             audioCtx = new AudioContext();
