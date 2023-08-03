@@ -25,15 +25,4 @@ const createSpeakCharacter = () => {
 
 export const speakCharacter = createSpeakCharacter();
 
-export const fetchAudio = async (
-    url:string
-): Promise<ArrayBuffer> => {
 
-  if (url == null) {
-    throw new Error("Something went wrong");
-  }
-
-  const resAudio = await fetch(url);
-  const buffer = await resAudio.arrayBuffer();
-  return buffer;
-};
