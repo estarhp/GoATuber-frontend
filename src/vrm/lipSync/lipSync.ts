@@ -1,6 +1,9 @@
 import { LipSyncAnalyzeResult } from "./lipSyncAnalyzeResult";
-
+//@ts-ignore
+import state from "../../store/state.js";
 const TIME_DOMAIN_DATA_LENGTH = 2048;
+
+
 
 export class LipSync {
   public readonly audio: AudioContext;
@@ -23,7 +26,7 @@ export class LipSync {
     }
 
     // cook
-    volume = 1 / (1 + Math.exp(-45 * volume + 5));
+    volume = 1 / (1 + Math.exp(-state.vrmSetting.lipSync * volume + 5));
     if (volume < 0.1) volume = 0;
 
     return {

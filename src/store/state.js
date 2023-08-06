@@ -1,4 +1,4 @@
-import {ref} from "vue"
+
 const state = {
         websocket :null,
         model4:null,
@@ -14,8 +14,12 @@ const state = {
         vrm:{
 
         },
-        loading:null
+        loading:null,
+        vrmSetting:{
+                lipSync:parseInt(localStorage.getItem("vrmLipSync")) || 45,
+        },
 }
 
 
 export default state
+
