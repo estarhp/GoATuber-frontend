@@ -1,5 +1,6 @@
 <template>
   <router-view></router-view>
+  <SoundRecord></SoundRecord>
 </template>
 
 <script setup>
@@ -8,6 +9,7 @@ import {onBeforeUnmount,onMounted,onBeforeMount} from "vue";
 import {initWebSocket} from "./ws/index.js";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
+import SoundRecord from "./components/SoundRecord.vue";
 const store = useStore()
 const router = useRouter()
 
