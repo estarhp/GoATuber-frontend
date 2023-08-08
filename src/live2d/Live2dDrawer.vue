@@ -89,6 +89,8 @@ onMounted(()=>{
         <el-slider v-model="store.state.percentage" show-input input-size="small"  />
       </div>
 
+      <SoundRecord></SoundRecord>
+
 
     </el-drawer>
 

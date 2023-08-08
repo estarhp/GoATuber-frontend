@@ -52,6 +52,8 @@ onMounted(()=>{
         <el-slider v-model="store.state.vrmSetting.lipSync" show-input input-size="small" @change="Save" />
       </div>
 
+      <SoundRecord></SoundRecord>
+
     </el-drawer>
 
 </template>
