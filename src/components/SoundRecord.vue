@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {Microphone} from "@element-plus/icons-vue";
 import Recorder from 'js-audio-recorder';
 let recorder = new Recorder();
 
@@ -22,9 +21,6 @@ function resume(){
   recorder.resume()
 }
 
-function stop(){
-  recorder.stop();
-}
 
 function play(){
   recorder.play();
