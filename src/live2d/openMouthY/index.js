@@ -11,7 +11,7 @@ let playing = false
 
 let o = 80
 
-export  async function getWav(data,store){
+export  async function getWav(data,store,onEnd){
     let response
 
     response = await getBuffer(data)
@@ -43,6 +43,7 @@ export  async function getWav(data,store){
            //清空model 的动作和表情
             window.websocket.send(0)
             store.state.model4.expression(0);
+            onEnd()
         }
     }).catch(error => {
         console.log(error)

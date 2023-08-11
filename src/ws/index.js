@@ -25,19 +25,28 @@ export function  initWebSocket() {
     // 连接关闭时触发
     window.websocket.onclose = websocketClose;
 
-    window.websocket.onmessage =(event) => {
+    window.websocket.onmessage =async (event) => {
+        if (event.data === "ok") {
+            ElMessage({
+                message: '成功建立连接 ₍ᐢ..ᐢ₎♡ ',
+                type: 'success'
+            });
+            return
+        }
             const modelType  = store.state.modelType.type
+            const data=JSON.parse(event.data)
+            const messages = data.messages
             switch (modelType) {
                 case 1 : {
-                    let data=JSON.parse(event.data)
-                    getWav(data,store).catch(err =>{
-                        console.error(err)
-                    })
+                    for (let i = 0; i < messages.length; i++) {
+                      await getWav(messages[i], store);
+                    }
                     break;
                 }
                 case 2 :{
-                    let data=JSON.parse(event.data)
-                    speakCharacter(data,viewer,onStart,onEnd);
+                    for (let i = 0; i < messages.length; i++) {
+                        await speakCharacter(messages[i], viewer, onStart, onEnd);
+                    }
                 }
             }
         }
@@ -45,10 +54,7 @@ export function  initWebSocket() {
 
 
 function websocketOnopen(){
-    ElMessage({
-        message: '成功建立连接 ₍ᐢ..ᐢ₎♡ ',
-        type: 'success'
-    });
+
 }
 function websocketOnerror(){
     ElMessage({
