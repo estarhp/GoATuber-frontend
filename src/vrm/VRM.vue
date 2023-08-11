@@ -22,7 +22,7 @@ onMounted(async ()=>{
   const modelName = route.params.modelName
   if (canvas) {
     viewer.setup(canvas.value);
-    await viewer.loadVrm("/vrm/"+modelName);
+    await viewer.loadVrm("/model/"+modelName);
     setTimeout(()=>{
       store.commit("closeLoading")
     },1000)

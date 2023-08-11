@@ -8,7 +8,7 @@ window.websocket = null
 export function  initWebSocket() {
     const store = useStore()
     //初始化weosocket
-    const wsuri = `ws://localhost:9000/connect`;
+    const wsuri = `ws://localhost:9000/ws`;
 
     window.websocket = new WebSocket(wsuri);
 
