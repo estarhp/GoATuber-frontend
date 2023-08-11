@@ -71,10 +71,9 @@ export class Model {
      */
     public async speak(buffer: ArrayBuffer) {
         // this.emoteController?.playEmotion(screenplay.expression);
-        await new Promise(() => {
+        await new Promise((resolve) => {
             this._lipSync?.playFromArrayBuffer(buffer, () => {
-             //@ts-ignore
-                window.websocket.send(0)
+                resolve(true)
             });
         }).catch(error =>{
             console.error(error)

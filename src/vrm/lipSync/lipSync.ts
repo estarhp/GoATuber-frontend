@@ -40,13 +40,22 @@ export class LipSync {
     const bufferSource = this.audio.createBufferSource();
     bufferSource.buffer = audioBuffer;
 
+    const playPromise = new Promise((resolve) => {
+      bufferSource.onended = () => {
+        resolve(true); // 解析 Promise 当音频播放结束
+      };
+    });
+
+
     bufferSource.connect(this.audio.destination);
     bufferSource.connect(this.analyser);
     bufferSource.start();
     if (onEnded) {
       bufferSource.addEventListener("ended", onEnded);
     }
+    await playPromise;
   }
+
 
   public async playFromURL(url: string, onEnded?: () => void) {
     const res = await fetch(url);

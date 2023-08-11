@@ -11,43 +11,44 @@ let playing = false
 
 let o = 80
 
-export  async function getWav(data,store,onEnd){
+export  async function getWav(data,store){
     let response
 
-    response = await getBuffer(data)
+    await new Promise(async (resolve, reject)=>{
+        response = await getBuffer(data)
 
-    const audioData = response;
-    audioCtx.decodeAudioData(audioData, (buffer)=>{
-        // 新建 Buffer 源
-        const source = audioCtx.createBufferSource();
-        source.buffer = buffer;
-        // 连接到 audioCtx
-        source.connect(audioCtx.destination);
-        // 连接到 音频分析器
-        source.connect(analyser);
-        // window.navigator.mediaDevices.getUserMedia({ audio: true });
-        // 开始播放
+        const audioData = response;
+        audioCtx.decodeAudioData(audioData, (buffer)=>{
+            // 新建 Buffer 源
+            const source = audioCtx.createBufferSource();
+            source.buffer = buffer;
+            // 连接到 audioCtx
+            source.connect(audioCtx.destination);
+            // 连接到 音频分析器
+            source.connect(analyser);
+            // window.navigator.mediaDevices.getUserMedia({ audio: true });
+            // 开始播放
 
-        playing = true;
-        run()
-        setTimeout(() => {
-            source.start(0);
-        },0.5)
+            playing = true;
+            run()
+            setTimeout(() => {
+                source.start(0);
+            },0.5)
 //调用相应地动作和表情
-        store.state.model4.expression(data.expression)
-        store.state.model4.motion(data["act"],data["movement"])
+            store.state.model4.expression(data.expression)
+            store.state.model4.motion(data["act"],data["movement"])
 
-        source.onended = ()=>{
-            // 停止播放
-           playing = false;
-           //清空model 的动作和表情
-            window.websocket.send(0)
-            store.state.model4.expression(0);
-            onEnd()
-        }
-    }).catch(error => {
-        console.log(error)
-        window.websocket.send(-1)
+            source.onended = ()=>{
+                // 停止播放
+                playing = false;
+                //清空model 的动作和表情
+                store.state.model4.expression(0);
+                resolve(true)
+            }
+        }).catch(error => {
+            console.log(error)
+            window.websocket.send(-1)
+        })
     })
 
 

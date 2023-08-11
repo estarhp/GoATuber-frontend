@@ -1,6 +1,6 @@
 import {getWav} from "../live2d/openMouthY/index.js";
 import {useStore} from "vuex";
-import {speakCharacter} from "../vrm/messages/speakCharacter";
+import speakCharacter from "../vrm/messages/speakCharacter";
 import viewer from "../vrm/loadVRM";
 
 window.websocket = null
@@ -26,30 +26,39 @@ export function  initWebSocket() {
     window.websocket.onclose = websocketClose;
 
     window.websocket.onmessage =async (event) => {
-        if (event.data === "ok") {
-            ElMessage({
-                message: '成功建立连接 ₍ᐢ..ᐢ₎♡ ',
-                type: 'success'
-            });
-            return
-        }
-            const modelType  = store.state.modelType.type
-            const data=JSON.parse(event.data)
-            const messages = data.messages
-            switch (modelType) {
-                case 1 : {
-                    for (let i = 0; i < messages.length; i++) {
-                      await getWav(messages[i], store);
-                    }
-                    break;
-                }
-                case 2 :{
-                    for (let i = 0; i < messages.length; i++) {
-                        await speakCharacter(messages[i], viewer, onStart, onEnd);
-                    }
-                }
-            }
-        }
+       try {
+           if (event.data === "ok") {
+               ElMessage({
+                   message: '成功建立连接 ₍ᐢ..ᐢ₎♡ ',
+                   type: 'success'
+               });
+               return
+           }
+           const modelType  = store.state.modelType.type
+           const data=JSON.parse(event.data)
+           const messages = data.messages
+           switch (modelType) {
+               case 1 : {
+                   for (let i = 0; i < messages.length; i++) {
+                       await getWav(messages[i], store);
+                   }
+                   window.websocket.send(0)
+                   break;
+               }
+               case 2 :{
+                   for (let i = 0; i < messages.length; i++) {
+                       await speakCharacter(messages[i], viewer, onStart, onEnd);
+                   }
+                   window.websocket.send(0)
+                   break
+               }
+           }
+       }catch(error){
+           console.error(error)
+           window.websocket.send(-1)
+       }
+    }
+
 }
 
 
