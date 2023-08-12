@@ -3,10 +3,13 @@ import {InitPermission, signText, SoundColor, startAnalyzing, stopAnalyzing} fro
 import Recorder from "js-audio-recorder";
 import {useStore} from "vuex";
 
+
 const OpenRecord = ref(false)
 
 const Color = ref<SoundColor>("#FFFF00")
 const text  = ref<signText>("录音关闭/暂停")
+const max = ref(parseInt(localStorage.getItem("MAX") || 20))
+const min = ref(parseInt(localStorage.getItem("MIN") || 10))
 const recorder = new Recorder();
 const store = useStore()
 
@@ -31,54 +34,56 @@ function start(){
 }
 
 function pause(){
-  recorder.pause();
-  Color.value = "#FFFF00"
-  text.value = "录音关闭/暂停"
+ if (store.state.Permission){
+   recorder.pause();
+   Color.value = "#FFFF00"
+   text.value = "录音关闭/暂停"
 
-  const wavBlob = recorder.getWAVBlob();
-  store.state.Permission = false;
+   const wavBlob = recorder.getWAVBlob();
+   store.state.Permission = false;
 
 // 创建一个 File 对象，将 Blob 转换为文件
-  const audioFile = new File([wavBlob], 'recorded.wav', { type: 'audio/wav' });
+   const audioFile = new File([wavBlob], 'recorded.wav', { type: 'audio/wav' });
 
 // 创建一个 FormData 对象来构建 POST 数据
-  const formData = new FormData();
-  formData.append('audioFile', audioFile); // 将文件添加到 FormData
+   const formData = new FormData();
+   formData.append('audioFile', audioFile); // 将文件添加到 FormData
 
 // 发送 POST 请求到服务器
-  fetch('/speech', {
-    method: 'POST',
-    body: formData
-  })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Server response:', data);
-      })
-      .catch(error => {
-        console.error('Error uploading audio:', error);
-      });
+   fetch('/speech', {
+     method: 'POST',
+     body: formData
+   })
+       .then(response => response.json())
+       .then(data => {
+         console.log('Server response:', data);
+       })
+       .catch(error => {
+         console.error('Error uploading audio:', error);
+       });
 
+ }
 }
-
-
-
 
 function play(){
   recorder.play();
 }
 
-function getWAVBlob(){
-  return recorder.getWAVBlob();
-}
-
-
 watch(OpenRecord,(newValue)=>{
   if (newValue === true){
-    startAnalyzing(start,pause)
+    startAnalyzing(start,pause,max,min)
   }else {
     stopAnalyzing()
   }
 })
+
+function SaveMAX(newValue:number){
+  localStorage.setItem("MAX",newValue.toString())
+}
+
+function SaveMIN(newValue: number){
+  localStorage.setItem("MIN",newValue.toString())
+}
 
 
 
@@ -97,6 +102,12 @@ watch(OpenRecord,(newValue)=>{
     <div class="sign" :style="`background:${Color}`"></div>
     <span style="font-size: 16px">{{text}}</span>
   </el-row>
+  <div class="slider-demo-block">
+    <el-slider v-model="max" show-input input-size="small" @change="SaveMAX" />
+  </div>
+  <div class="slider-demo-block">
+    <el-slider v-model="min" show-input input-size="small" @change="SaveMIN" />
+  </div>
 
   <div class="sound-record">
         <el-row flex justify="center" style="flex-wrap: nowrap">

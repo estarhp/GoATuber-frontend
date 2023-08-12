@@ -1,8 +1,6 @@
 <script setup lang="ts">
     import {ref,onMounted} from "vue"
     import {useStore} from "vuex";
-    import {float} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
-    import {stringifyQuery} from "vue-router";
     const drawer =  ref(false)
     const store = useStore()
     function handlerClick(){

@@ -1,3 +1,5 @@
+import {Ref} from "vue";
+
 export type SoundColor = "#FFFF00"|"#70B603"|"#D9001B";
 export type signText = "录音关闭/暂停" | "录音已开启" | "正在录音";
 
@@ -31,18 +33,17 @@ export function stopAnalyzing() {
     }
 }
 
-export function startAnalyzing(start:Function,pause:Function) {
+export function startAnalyzing(start:Function,pause:Function,max: Ref<number>,min: Ref<number>) {
     const dataArray = new Uint8Array(analyserNode.fftSize);
     analyserNode.getByteFrequencyData(dataArray);
 
-    const threshold = 20; // 设置阈值
     const bufferLength = analyserNode.frequencyBinCount;
 
     const checkVolume = () => {
         analyserNode.getByteFrequencyData(dataArray);
         const averageVolume = dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
 
-        if (averageVolume > threshold) {
+        if (averageVolume > max.value) {
             if (haveTimer){
                 clearTimeout(timer)
                 haveTimer = false
@@ -53,7 +54,7 @@ export function startAnalyzing(start:Function,pause:Function) {
             }
         }
 
-        if (averageVolume < 5){
+        if (averageVolume < min.value){
             if (isStart && !haveTimer){
                 haveTimer  = true;
                 timer = setTimeout(()=>{
