@@ -18,6 +18,7 @@ const state = {
         vrmSetting:{
                 lipSync:parseInt(localStorage.getItem("vrmLipSync")) || 45,
         },
+        Permission:true
 }
 
 

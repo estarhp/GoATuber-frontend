@@ -43,6 +43,7 @@ export function  initWebSocket() {
                        await getWav(messages[i], store);
                    }
                    window.websocket.send(0)
+                   store.state.Permission = true
                    break;
                }
                case 2 :{
@@ -50,12 +51,14 @@ export function  initWebSocket() {
                        await speakCharacter(messages[i], viewer, onStart, onEnd);
                    }
                    window.websocket.send(0)
+                   store.state.Permission = true
                    break
                }
            }
        }catch(error){
            console.error(error)
            window.websocket.send(-1)
+           store.state.Permission = true
        }
     }
 
