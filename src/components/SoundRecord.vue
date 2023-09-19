@@ -8,12 +8,25 @@ const OpenRecord = ref(false)
 
 const Color = ref<SoundColor>("#FFFF00")
 const text  = ref<signText>("录音关闭/暂停")
-const max = ref(parseInt(localStorage.getItem("MAX") || 20))
-const min = ref(parseInt(localStorage.getItem("MIN") || 10))
+const max = ref(parseInt(localStorage.getItem("MAX")) || 20)
+const min = ref(parseInt(localStorage.getItem("MIN") )|| 10)
 const recorder = new Recorder();
 const store = useStore()
+const currentV = ref(0)
+
+const colors = [
+  { color: '#f56c6c', percentage: 20 },
+  { color: '#e6a23c', percentage: 40 },
+  { color: '#5cb87a', percentage: 60 },
+  { color: '#1989fa', percentage: 80 },
+  { color: '#6f7ad3', percentage: 100 },
+]
 
 
+
+const percentage = computed(()=>{
+  return  parseInt(currentV.value / 255 * 100)
+})
 
 onMounted(()=>{
   InitPermission(Recorder)
@@ -65,13 +78,9 @@ function pause(){
  }
 }
 
-function play(){
-  recorder.play();
-}
-
 watch(OpenRecord,(newValue)=>{
   if (newValue === true){
-    startAnalyzing(start,pause,max,min)
+    startAnalyzing(start,pause,max,min,currentV)
   }else {
     stopAnalyzing()
   }
@@ -102,31 +111,44 @@ function SaveMIN(newValue: number){
     <div class="sign" :style="`background:${Color}`"></div>
     <span style="font-size: 16px">{{text}}</span>
   </el-row>
-  <div class="slider-demo-block">
-    <el-slider v-model="max" show-input input-size="small" @change="SaveMAX" />
-  </div>
-  <div class="slider-demo-block">
-    <el-slider v-model="min" show-input input-size="small" @change="SaveMIN" />
-  </div>
 
-  <div class="sound-record">
-        <el-row flex justify="center" style="flex-wrap: nowrap">
-          <el-button @click="play">
-            播放录音
-          </el-button>
-        </el-row>
-      </div>
+  <el-row flex justify="space-around" align="middle" style="flex-wrap: nowrap">
+    <span class="fix">
+      开始录音阈值
+    </span>
+    <div class="slider-demo-block">
+      <el-slider v-model="max" show-input input-size="small" @change="SaveMAX" :min="min" max="255" />
+    </div>
+  </el-row>
+  <el-row flex align="middle" style="flex-wrap: nowrap">
+    <span class="fix">
+      停止录音阈值
+    </span>
+    <div class="slider-demo-block" >
+      <el-slider v-model="min" show-input input-size="small" @change="SaveMIN" :max="max"/>
+    </div>
+  </el-row>
+
+ <el-row flex justify="space-around" align="middle" style="flex-wrap: nowrap;margin-top: 10px">
+      <el-statistic title="现在音量" :value="currentV" style="text-align: center"/>
+     <el-progress type="dashboard" :percentage="percentage" :color="colors" />
+
+ </el-row>
+
+
 
 </template>
 
 <style scoped>
 
-.sound-record {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 10px 0 ;
+.slider-demo-block {
+  flex-grow: 5;
 }
+
+.fix {
+  flex-grow: 1;
+}
+
 h4 {
   margin: 20px 0;
   padding: 0;

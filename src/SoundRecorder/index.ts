@@ -11,7 +11,6 @@ let timer;
 let haveTimer = false;
 let animationFrameId;
 
-
 export async function  InitPermission(Recorder){
      Recorder.getPermission().then(async () => {
         mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -33,7 +32,7 @@ export function stopAnalyzing() {
     }
 }
 
-export function startAnalyzing(start:Function,pause:Function,max: Ref<number>,min: Ref<number>) {
+export function startAnalyzing(start:Function,pause:Function,max: Ref<number>,min: Ref<number>,currentV:Ref<number>) {
     const dataArray = new Uint8Array(analyserNode.fftSize);
     analyserNode.getByteFrequencyData(dataArray);
 
@@ -42,7 +41,7 @@ export function startAnalyzing(start:Function,pause:Function,max: Ref<number>,mi
     const checkVolume = () => {
         analyserNode.getByteFrequencyData(dataArray);
         const averageVolume = dataArray.reduce((acc, val) => acc + val, 0) / bufferLength;
-
+        currentV.value = averageVolume
         if (averageVolume > max.value) {
             if (haveTimer){
                 clearTimeout(timer)
