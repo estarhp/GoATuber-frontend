@@ -1,0 +1,1 @@
+export const URL = 'ws://localhost:9000/ws';
