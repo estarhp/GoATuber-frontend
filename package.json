@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^5.10.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.16",
     "axios": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -27,6 +31,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "typescript": "^5.0.2",
+    "unocss": "^0.57.2",
     "vite": "^4.4.5"
   }
 }
