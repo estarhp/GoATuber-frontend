@@ -1,7 +1,10 @@
 export class WS {
     private websocket: WebSocket
+    private reStartTimeOut: number | undefined
+    private readonly URL: string;
 
     constructor(URL: string) {
+        this.URL = URL
         this.websocket = new WebSocket(URL)
         // 初始化事件处理程序
         this.websocket.onopen = () => {
@@ -37,18 +40,16 @@ export class WS {
         const isPingFrame = (byte & 0x0F) === 0x09; // 检查最高位为1，且后四位为0001
 
         if (isPingFrame) {
-            console.log('Received a Ping frame:', data, (new Date()).getTime());
             // 执行处理 ping 控制帧的逻辑
+            this.startHeartbeat()
+            this.stopReStart()
             this.pong(); // 如果收到 ping 控制帧，可以回复一个 pong 控制帧
-        } else {
-            // 处理其他类型的消息
-            console.log('Received message:', data, (new Date()).getTime());
         }
     }
 
-    onError(error: any) {
+    onError(error: Event) {
         // 自定义处理错误事件的逻辑
-        console.error('WebSocket error:', error);
+        console.log(error)
     }
 
     sendControlFrame(opcode: number, data: ArrayBuffer) {
@@ -58,7 +59,6 @@ export class WS {
         frame[0] = opcode;
         frame[1] = buf.byteLength;
         frame.set(buf, 2);
-
         this.websocket.send(frame);
     }
 
@@ -80,14 +80,29 @@ export class WS {
         this.stopHeartbeat(); // 确保只有一个心跳定时器在运行
         this.heartbeatInterval = setTimeout(() => {
             this.ping(); // 定时发送 ping 消息
-            this.startHeartbeat()
+            this.prepareRestart()
         }, 5000); // 5秒一次，可以根据需要调整时间间隔
     }
 
     public stopHeartbeat() {
         if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval); // 停止心跳定时器
+            clearTimeout(this.heartbeatInterval); // 停止心跳定时器
             this.heartbeatInterval = undefined;
         }
     }
+
+    private stopReStart(){
+        if (this.reStartTimeOut) {
+            clearTimeout(this.reStartTimeOut); // 停止心跳定时器
+            this.reStartTimeOut = undefined;
+        }
+    }
+
+    private prepareRestart(){
+        this.reStartTimeOut = setTimeout(() => {
+            this.websocket = new WebSocket(this.URL)
+        },15000)
+    }
+
+
 }

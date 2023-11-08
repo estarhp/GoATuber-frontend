@@ -4,7 +4,6 @@ import ws from "./ws";
 function App() {
     useEffect(() => {
         ws.startHeartbeat()
-        ws.stopHeartbeat()
     }, []);
 
 
