@@ -32,8 +32,18 @@ export class WS {
     }
 
     onMessage(data: any) {
-        // 自定义处理接收消息事件的逻辑
-        console.log('Received message:', data,(new Date()).getTime());
+        const byte = new Uint8Array(data)[0]; // 获取数据的第一个字节
+        // 检查是否为 Ping 控制帧
+        const isPingFrame = (byte & 0x0F) === 0x09; // 检查最高位为1，且后四位为0001
+
+        if (isPingFrame) {
+            console.log('Received a Ping frame:', data, (new Date()).getTime());
+            // 执行处理 ping 控制帧的逻辑
+            this.pong(); // 如果收到 ping 控制帧，可以回复一个 pong 控制帧
+        } else {
+            // 处理其他类型的消息
+            console.log('Received message:', data, (new Date()).getTime());
+        }
     }
 
     onError(error: any) {
