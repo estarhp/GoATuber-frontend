@@ -59,17 +59,16 @@ export class WS {
 
     sendControlFrame(opcode: number, data: ArrayBuffer) {
         const buf = new Uint8Array(data);
-        const frame = new Uint8Array(2 + buf.byteLength);
+        const frame = new Uint8Array(1 + buf.byteLength);
         frame[0] = opcode;
-        frame[1] = buf.byteLength;
-        frame.set(buf, 2);
+        frame.set(buf, 1);
         this.websocket.send(frame);
     }
 
     ping() {
         // 构建 ping 控制帧
         const pingData = new TextEncoder().encode('ping'); // 将数据编码为 ArrayBuffer
-        this.sendControlFrame(0x0A - 0x01 , pingData); // 0x09 表示 ping 控制帧
+        this.sendControlFrame(0x09 , pingData); // 0x09 表示 ping 控制帧
     }
 
     pong() {
