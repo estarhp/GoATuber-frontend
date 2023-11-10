@@ -59,9 +59,10 @@ export class WS {
 
     sendControlFrame(opcode: number, data: ArrayBuffer) {
         const buf = new Uint8Array(data);
-        const frame = new Uint8Array(1 + buf.byteLength);
+        const frame = new Uint8Array(2 + buf.byteLength);
         frame[0] = opcode;
-        frame.set(buf, 1);
+        frame[1] = buf.byteLength;
+        frame.set(buf, 2);
         this.websocket.send(frame);
     }
 
