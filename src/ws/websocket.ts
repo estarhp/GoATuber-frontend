@@ -1,6 +1,6 @@
 export class WS {
     private websocket: WebSocket
-    private reStartTimeOut: number | undefined
+    private reStartTimeOut: NodeJS.Timeout | undefined
     private readonly URL: string;
 
     constructor(URL: string) {
@@ -59,10 +59,10 @@ export class WS {
 
     sendControlFrame(opcode: number, data: ArrayBuffer) {
         const buf = new Uint8Array(data);
-        // const frame = new Uint8Array(2 + buf.byteLength);
-        // frame[0] = opcode;
-        // frame[1] = buf.byteLength;
-        // frame.set(buf, 2);
+        const frame = new Uint8Array(2 + buf.byteLength);
+        frame[0] = opcode;
+        frame[1] = buf.byteLength;
+        frame.set(buf, 2);
         this.websocket.send(buf);
     }
 
@@ -78,7 +78,7 @@ export class WS {
         this.sendControlFrame(0x0A, pongData); // 0x0A 表示 pong 控制帧
     }
 
-    private heartbeatInterval:  number | undefined;
+    private heartbeatInterval:  NodeJS.Timeout | undefined;
 
     public startHeartbeat() {
         this.stopHeartbeat(); // 确保只有一个心跳定时器在运行
