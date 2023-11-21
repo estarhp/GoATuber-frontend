@@ -35,21 +35,9 @@ export class WS {
     }
 
     onMessage(data: any) {
-        const byte = new Uint8Array(data)[0]; // 获取数据的第一个字节
-        // 检查是否为 Ping 控制帧
-        const isPongFrame = (byte & 0x0F) === 0x0A;
-        const isPingFrame = (byte & 0x0F) === 0x09;
-
-        if (isPongFrame) {
-            // 执行处理 pong 控制帧的逻辑
-            this.startHeartbeat() //开启下一轮ping
-            this.stopReStart()
-        }
-
-        if(isPingFrame) {
-            // 执行处理 ping 控制帧的逻辑
-            this.pong() //回复一个pong
-        }
+       if(data === "pong"){
+           this.stopReStart()
+       }
     }
 
     onError(error: Event) {
@@ -57,25 +45,12 @@ export class WS {
         console.log(error)
     }
 
-    sendControlFrame(opcode: number, data: ArrayBuffer) {
-        const buf = new Uint8Array(data);
-        const frame = new Uint8Array(2 + buf.byteLength);
-        frame[0] = opcode;
-        frame[1] = buf.byteLength;
-        frame.set(buf, 2);
-        this.websocket.send(buf);
-    }
-
     ping() {
-        // 构建 ping 控制帧
-        const pingData = new TextEncoder().encode('ping'); // 将数据编码为 ArrayBuffer
-        this.sendControlFrame(0x09 , pingData); // 0x09 表示 ping 控制帧
+        this.websocket.send("ping")
     }
 
     pong() {
-        // 构建 pong 控制帧
-        const pongData = new TextEncoder().encode('pong'); // 将数据编码为 ArrayBuffer
-        this.sendControlFrame(0x0A, pongData); // 0x0A 表示 pong 控制帧
+        this.websocket.send("pong")
     }
 
     private heartbeatInterval:  NodeJS.Timeout | undefined;
