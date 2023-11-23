@@ -1,8 +1,15 @@
+import { LoadBase64 } from "./loadBase64"
+import { LoadWav } from "./loadWav"
+
 export class LoadSound {
     private audioCtx: AudioContext | undefined
     private analyser: AnalyserNode | undefined
     private frequencyData: Uint8Array | undefined
+    public loadWav: LoadWav | undefined
+    public loadBase64: LoadBase64 | undefined
     constructor() {
+       this.loadBase64 = new LoadBase64()
+       this.loadWav = new LoadWav() 
        this.initSoundLoader()
     }
     createAnalyser() {
