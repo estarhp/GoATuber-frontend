@@ -1,5 +1,5 @@
 import axios from "axios";
-import {handleBaseUrl} from "./tools";
+import {handleBaseUrl, handleGeneralError} from "./tools";
 
 axios.interceptors.request.use((config) => {
     return handleBaseUrl(config)
@@ -13,6 +13,9 @@ axios.interceptors.response.use(
         return response.data
     },
     (error) => {
+        if (error)  handleGeneralError(error.response)
+
+        return Promise.reject(error.response)
 
     }
 )
