@@ -8,7 +8,7 @@ axios.interceptors.request.use((config) => {
 
 axios.interceptors.response.use(
     (response) => {
-        if (response.status !== 200) Promise.reject(response.data)
+        if (response.status !== 200) return Promise.reject(response.data)
 
         return response.data
     },
