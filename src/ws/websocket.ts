@@ -1,6 +1,7 @@
+//TODO: 和其他的对象联合，对应的消息对象message 还没调整
 export class WS {
     private websocket: WebSocket
-    private reStartTimeOut: NodeJS.Timeout | undefined
+    private reStartTimeOut: number | undefined
     private readonly URL: string;
 
     constructor(URL: string) {
@@ -53,7 +54,7 @@ export class WS {
         this.websocket.send("pong")
     }
 
-    private heartbeatInterval:  NodeJS.Timeout | undefined;
+    private heartbeatInterval:  number | undefined;
 
     public startHeartbeat() {
         this.stopHeartbeat(); // 确保只有一个心跳定时器在运行
