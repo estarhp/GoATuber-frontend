@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosError, AxiosResponse} from "axios";
 import {handleBaseUrl, handleGeneralError} from "./tools";
 
 axios.interceptors.request.use((config) => {
@@ -19,3 +19,14 @@ axios.interceptors.response.use(
 
     }
 )
+
+
+export function Get(url: string): Promise<[AxiosError | null, AxiosResponse["data"] | null]> {
+    return new Promise((resolve) => {
+        axios.get(url).then((res) => {
+            resolve([null, res])
+        }).catch((error) => {
+            resolve([error, null])
+        })
+    })
+}
