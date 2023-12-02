@@ -7,7 +7,6 @@ export class Vrm extends Model{
     }
 
     model: Live2DModel | undefined;
-    modelScale: number | undefined;
 
     createModel(): void {
     }

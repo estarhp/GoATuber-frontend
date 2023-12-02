@@ -13,17 +13,20 @@ export abstract class Model {
 
     public modelType: ModelType
     //模型的放大缩小的比例
-    abstract modelScale: number | undefined
+    public modelScale: number | null
 
     protected constructor(modelType: ModelType) {
+        this.modelScale = parseFloat(localStorage.getItem("token") ?? "")
         this.modelType = modelType
     }
+
+    abstract createModel(): void
+
 
     init() {
         this.createModel()
     }
 
-    abstract createModel(): void
 
     static async getModelType() {
         const [error, response] = await getModelType();
